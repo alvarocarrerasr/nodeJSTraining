@@ -21,6 +21,19 @@ Obviamente, la guía puede contener errores. En ese caso, te agradecería que ab
 
 La variable global process contiene un argumento, argv que nos permite obtener los argumentos incluidos en la consola del sistema para iniciar nuestra aplicación node.
 
+## Ejecución de instrucciones en NodeJS
+NodeJS cuenta con tres ED con las que se basa a la hora de ejecutar las diferentes instrucciones del código:
+
+* Call stack (pila): es donde se colocarán cada una de las variables, objetos y llamadas a funciones/procedimientos que se hagan en el ámbito de ejecución del método, ** y que se vayan a ejecutar/tratar en el momento ** .
+
+* Node APIS: en esta parte se almacenarán aquellas llamadas a funciones que se hagan de forma asíncrona (así pues, las llamadas a setTimeout (function,time) pasarán por esta parte).
+
+* Callback-Queue: La cola de callbacks estará formada por todas aquellas funciones/procedimientos de tipo asíncrono que ya se hayan ejecutado (obtenido información de una Base de Datos, hecha una petición HTTP... ).
+
+A su vez, tendremos el **event-loop** que, si detecta que la pila está vacía (IDLE), procederá a extraer el más antiguo elemento de la Callback-Queue.
+
+Es decir, a diferencia de una instrucción bloqueante (síncrona) que entraría en la pila y no dejaría que se ejecutara la siguiente instrucción, las no-bloqueante (asíncrona) esperarían en la Callback-Queue una vez tengan los recursos que se les solicita, antes de pasar a la pila y, por tanto, no pasarán a la pila hasta que el conjunto de instrucciones de la pila se hayan procesado.
+
 ## Extendiendo Node JS y la API de NodeJS
 Desde la URL www.npmjs.com podemos encontrar un enorme repositorio de módulos desarrollados por terceros que nos pueden resultar muy útiles para nuestra aplicación.
 

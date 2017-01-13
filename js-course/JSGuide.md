@@ -113,7 +113,7 @@ Similarmente, tampoco podremos generar un String JSON a partir de un objeto JS q
 
 Debido a la alta popularidad de JSON y lo fácil que resulta utilizarlo y entenderlo para los programadores de JS, el mismo lenguaje contiene dos funciones built-in que manejan JSON:
 
-* JSON.stringify(objetoJS): convertirá el objeto en uno en formato JSON (String correspondiente).
+* JSON.stringify(objetoJS, valorReemplazo, espacioEntreElementos): convertirá el objeto en uno en formato JSON (String correspondiente).
 
 * JSON.parse(objetoJSON): convertirá un objeto en formato JSON en uno en formato JS.
 
