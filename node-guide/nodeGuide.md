@@ -133,3 +133,10 @@ Nota: en el curso se ha utilizado la versión 4.7.1 y es por eso por lo que lo i
 Yargs cuenta además con muchas utilidades adicionales, como por ejemplo, nos da la posibilidad de generar páginas de ayuda (comando --help) o crear alias de comandos, así como sus correspondientes descripciones.
 	Ver el ejemplo de yargsSettings en NotesNode.
 Más información en https://www.npmjs.com/package/yargs.
+
+### Requests
+Requests, módulo NPM descargable desde https://www.npmjs.com/package/request, permite realizar solicitudes HTTP, contra un servidor.
+Este módulo, usado de una forma asíncrona devuelve en la callback tres objetos:
+* err: Que indica el error que se haya producido. En caso de no haberlo será null.
+* response: Que incluye la inforamacón de vuelta del servidor.
+* body: que incluye el cuerpo de la solicitud de respuesta.
