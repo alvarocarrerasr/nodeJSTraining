@@ -9,4 +9,4 @@ At this moment, I am only hosting the exercises proposed in the Udemy Course  Th
 * Weather App: The project uses async I/O to collect weather information from an API. Moreover, it is possible to get user's current position and from that information, show the weather prediction.
 
 
-To conclude, I have also uploaded a personal guide, this time in Spanish, about the weirdest aspects of JavaScript.
+To conclude, I have also uploaded a personal guide, this time in Spanish, about the weirdest aspects of JavaScript. Whatsmore, I include too my NodeJS notes. 

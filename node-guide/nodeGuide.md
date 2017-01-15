@@ -140,3 +140,46 @@ Este módulo, usado de una forma asíncrona devuelve en la callback tres objetos
 * err: Que indica el error que se haya producido. En caso de no haberlo será null.
 * response: Que incluye la inforamacón de vuelta del servidor.
 * body: que incluye el cuerpo de la solicitud de respuesta.
+Métodos HTTP:
+
+Ejemplos:
+* Método GET. Ejemplo:
+``` javascript
+	const request = require("request");
+	var objReq={
+		method:"GET",
+		url:"http://wwww.google.es",
+		qs: {
+			/*Aquí pondremos los Query Strings*/
+			q="Universidad de Valladolid"
+		}
+	};
+	request(objReq,(err,request,data)=>{
+		if(err | request.statusCode!="200"){
+			/// Tratamiento del error
+		}
+		else{
+			///Tratar con data
+		}
+	});
+```
+* Método POST. Ejemplo:
+``` javascript
+	const request = require("request");
+	var objReq={
+		method:"POST",
+		url:"http://",
+		form: {
+			/*Aquí pondremos los Query Strings*/
+			q="Universidad de Valladolid"
+		}
+	};
+	request(objReq,(err,request,data)=>{
+		if(err | request.statusCode!="200"){
+			/// Tratamiento del error
+		}
+		else{
+			///Tratar con data
+		}
+	});
+```
