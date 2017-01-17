@@ -210,3 +210,31 @@ _.extend(objetoDestino,objetoOrigen...);
 que copia todas las propiedades del conjunto de atributos que le pasemos en objetoOrigen... en el objeto objetoDestino.
 
 He entrecomillado herencia, ya que no es una herencia propiamente dicha, ni utiliza la POO al estilo JavaScript (con prototipos).
+
+## Promesas
+
+Las promesas son una característica tíipica de ES6, aunque es posible encontrar esta misma caracterísitca usando módulos adicionales en otras versiones de JS.
+Las promesas son una alternativa a las callbacks y resultan muy útiles para indicar de manera única, si ha habido éxito o fracaso en la operación, a diferencia de las callbacks. Es decir, cuando una promesa ha sido settled (fijada) no podemos cambiar el valor de éxito o fracaso de la misma.
+Para construir una promesa utilizaremos el constructor:
+```javascript
+//solo escenario de éxito
+var aPromise = new Promise((resolve,reject)=>{
+    resolve("It worked!");
+});
+
+//o, solo escenario de fracaso
+var aPromise = new Promise((resolve,reject)=>{
+    reject("Unable to fulfill promise");
+});
+```
+Muy importante destacar que deben existir dos argumentos (resolve y reject), se deben llamar así y que estos solo aceptan **1 argumento**.
+
+Otra de las diferencias con las callbacks, es que con estas últimas inferíamos el éxito o fracaso de la operación dependiendo de qué argumento ha sido instanciado. En las promesas solo ejecutaremos el método adecuado, por lo que la comprobación es mucho más sencilla:
+```javascript
+aPromise.then((message)=>{
+  console.log("Success:",message);
+	},(errorMessage)=>{
+  console.log("Error:",errorMessage);
+	}
+);
+```

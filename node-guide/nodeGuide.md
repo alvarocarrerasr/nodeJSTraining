@@ -170,7 +170,7 @@ Ejemplos:
 		method:"POST",
 		url:"http://",
 		form: {
-			/*Aquí pondremos los Query Strings*/
+			/*Datos de un formulario*/
 			q="Universidad de Valladolid"
 		}
 	};
