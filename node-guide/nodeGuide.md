@@ -183,3 +183,7 @@ Ejemplos:
 		}
 	});
 ```
+
+### Axios
+
+Axios (https://www.npmjs.com/package/axios) es un módulo, muy similar a Request, pero permite realizar la solicitud por medio de Promises, lo que simplifica mucho las solicitudes Web.

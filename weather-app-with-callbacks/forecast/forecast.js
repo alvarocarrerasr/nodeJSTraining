@@ -1,5 +1,5 @@
 const request = require("request");
-const apiKey=encodeURIComponent("f9d3268a6ce6fbfb71411195905");
+const apiKey=encodeURIComponent("***");
 const requestProperties={
   lang:"es",
   units:"ca" /*SI units+ wind speed in KmH*/
