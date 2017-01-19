@@ -1,11 +1,30 @@
 const express = require("express");
 const hbs = require("hbs");
+const fs = require("fs");
 
+const maintenanceMode = false;
 var app = express();
 hbs.registerPartials(__dirname + "/views/partials");
 app.set("view engine","hbs");
 
-//app.use(express.static("./public_content")); //to use a directory for hosting static-only files
+
+app.use((request,response,next)=>{
+  /*Simple logger, middleware*/
+  const file="logFile.txt"
+  var now = new Date().toString();
+  var line=`${now}: ${request.method} ${request.url}`;
+  console.log(line);
+  fs.appendFile(file,`${line}\n`,(error)=>{
+    if(error){
+      console.log("Error while writing into log");
+    }
+  });
+  if(maintenanceMode){
+    response.render("maintenance.hbs");
+  }else{
+    next();//to move to the next piece of middleware
+  }
+});
 
 app.get("/whatIReallyLike", (request,response)=>{
   //response.send("<h1><b>Hello World!</b></h1>");
@@ -46,5 +65,5 @@ app.get("/3II",(request,response)=>{
   };
   response.send(obj);
 })
-
+app.use(express.static("./public_content")); //to use a directory for hosting static-only files
 app.listen(3210);

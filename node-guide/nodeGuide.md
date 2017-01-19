@@ -221,3 +221,5 @@ const hbs = require("hbs");
 hbs.registerPartials(__dirname + "/views/partials"); /* para indicar donde están los partials (cabeceras, footers...)*/
 
 ```
+
+Se basa en la sintaxis de HandleBarsJS (http://handlebarsjs.com/)
