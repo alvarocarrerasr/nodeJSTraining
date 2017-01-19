@@ -187,3 +187,37 @@ Ejemplos:
 ### Axios
 
 Axios (https://www.npmjs.com/package/axios) es un módulo, muy similar a Request, pero permite realizar la solicitud por medio de Promises, lo que simplifica mucho las solicitudes Web.
+
+### Express.JS
+Express.JS (http://expressjs.com/) es un framework Web de Node que permite crear servidores en NodeJS.
+
+Una vez hecho el require realizaremos todas las operaciones sobre el framework mediante la variable app
+```javascript
+var app = express();
+```
+Métodos:
+* app.get(): para enviar texto (JSON, HTML...)
+``` javascript
+ app.get(URI, (request,response)=>{
+	response.send("text");
+	});
+
+	/* Si usamos plantillas */
+	app.get(URI, (request,response)=>{
+	 response.send({
+		 nombre: "kjdj",
+		 edad:392842
+	 }}));
+
+```
+* app.listen(NumPuerto): para hacer que el servidor escuche en un determinado puesto
+* app.use(express.static("./public_content")): para utilizar un directorio donde almacenar archivos estáticos (ficheros CSS, JS, HTML...).
+
+### HBS
+HBS (https://www.npmjs.com/package/hbs) es un módulo de NodeJs que nos permite utilizar plantillas, muy útiles si tenemos un conjunto de ficheros estáticos y queremos crear un sitio dinámico.
+
+```javascript
+const hbs = require("hbs");
+hbs.registerPartials(__dirname + "/views/partials"); /* para indicar donde están los partials (cabeceras, footers...)*/
+
+```
