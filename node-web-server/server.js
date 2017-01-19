@@ -1,6 +1,7 @@
 const express = require("express");
 const hbs = require("hbs");
 const fs = require("fs");
+const port = process.env.PORT || 3210; // for Heroku purposes.
 
 const maintenanceMode = false;
 var app = express();
@@ -66,4 +67,6 @@ app.get("/3II",(request,response)=>{
   response.send(obj);
 })
 app.use(express.static("./public_content")); //to use a directory for hosting static-only files
-app.listen(3210);
+app.listen(port,()=>{
+  console.log("Server is listening on port",port);
+});
