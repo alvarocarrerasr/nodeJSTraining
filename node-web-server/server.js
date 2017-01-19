@@ -3,6 +3,12 @@ const hbs = require("hbs");
 const fs = require("fs");
 const port = process.env.PORT || 3210; // for Heroku purposes.
 
+/* So as to make the application work in Heroku, we need to include
+start: node server.js.
+
+Moreover, we'll start the app using the command npm start.
+*/
+
 const maintenanceMode = false;
 var app = express();
 hbs.registerPartials(__dirname + "/views/partials");
