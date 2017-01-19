@@ -5,7 +5,7 @@ var app = express();
 hbs.registerPartials(__dirname + "/views/partials");
 app.set("view engine","hbs");
 
-app.use(express.static("./public_content")); //to use a directory for hosting static-only files
+//app.use(express.static("./public_content")); //to use a directory for hosting static-only files
 
 app.get("/whatIReallyLike", (request,response)=>{
   //response.send("<h1><b>Hello World!</b></h1>");
