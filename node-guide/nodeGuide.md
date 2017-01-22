@@ -97,7 +97,7 @@ Comandos:
 * npm init: para iniciar el repositorio y poder usar NPM en el proyecto. Nos pedirá ciertos detalles como la versión del software, nombre o punto de entrada y terminará generando un fichero package.json, con esta configuración.
 
 * npm install [nombreMódulo]--save: para instalar un módulo de NPM en nuestro directorio y (--save) actualizar el fichero package.json, para poder utilizar nuestro nuevo módulo en nuestro directorio de NodeJS. ¡Ya podremos hacer un require()!. Instala los módulos en la carpeta node_modules, que se encuentra dentro de ..
-
+* npm install --save-dev [nombreMódulo]: para instalar un módulo de NPM en nuestro directorio y (--save) actualizar el fichero package.json. Nota: la bandera --save-dev indica que se instale con únicamente propósito de desarrollo, es decir, mientras el software se encuentre en fase de desarrollo. Por ejemplo, en Heroku, **no se instalarán**.
 * npm install: para volver a instalar los módulos listados en package.json (ver nota importante que hay a continuación).
 * npm install [nombreMódulo] -g: para instalar un módulo globalmente, esto es, que se va a utilizar en el contexto de Node. Instala los módulos en $HOME/node_modules.
 
@@ -105,6 +105,59 @@ Comandos:
 Muy importante: la carpeta node_modules que genera NPM nunca se deberá compartir. Esto es debido a que incluye código ejecutable únicamente por el computador en el que se está ejecutando el proyecto, por lo que si deseamos compartir el proyecto deberemos borrar previamente esta carpeta.
 
 Una vez copiada, se podrá recuperar de nuevo todos los contenidos (y volver a compilar el código para nuestro ordenador) utilizando el comando npm install (sin más argumentos), que buscará en el fichero package.json las dependencias a instalar.
+
+## Testing en NodeJS
+
+Para testear nuestro código utilizaremos el framework MochaJS. MochaJS nos permitirá ejecutar los tests de forma automática, de tal forma que, a medida que añadimos nuevo código a nuestro desarrollo, resultará muy sencillo testearlo, sin tener que pensar caso por caso.
+```bash
+Nota: ver apartado MochaJS, en módulos NPM
+```
+
+Los ficheros de testeo suenen tener la extensión .test.js y suelen colocarse en el mismo directorio donde está el código fuente que deseamos probar.
+
+Para automatizar los tests, modificaremos la línea tests, de package.json, de tal forma que quede así:
+```javascript
+"scripts": {
+	"test": "mocha **/*.test.js"
+	...
+}
+```
+
+Los test se escriben por escenarios, de tal forma que un escenario englobará un conjunto de casos que tienen un resultado que está relacionado:
+
+``` javascript  
+it("DESCRIPCIÓN DEL ESCENARIO",()=>{
+	/* PRUEBA*/
+	if (/*COMPROBACIÓN DE LA PRUEBA*/){
+		throw new Error (`Expected *,  but got ${sol}`);
+	}
+});
+```
+No hará falta importar nada, aunque deberemos correr el fichero de prueba con el comando:
+
+```bash
+npm test
+```
+Y el mismo NPM, con la línea de código insertada anteriormente, ya comprobará qué ficheros debe testear (extensión .test.js).
+
+Similarmente, podremos ejecutar tests de manera automática, cada vez que se guarde el código. Para ello utilizaremos Nodemon (ver módulos NPM), utilizando el siguiente comando:
+```bash
+nodemon --exec 'npm test'
+```
+
+De esta forma podremos modificar package.json con el siguiente código:
+```javascript
+"scripts": {
+	"test": "mocha **/*.test.js",
+	"test-watch":"nodemon --exec \"npm test\""
+},
+```
+Y se ejecutará con:
+```bash
+npm run test-watch
+```
+
+De esta forma automatizaremos totalmente nuestros tests.
 
 ### Módulos interesantes de NPM
 #### Lodash
@@ -223,3 +276,14 @@ hbs.registerPartials(__dirname + "/views/partials"); /* para indicar donde está
 ```
 
 Se basa en la sintaxis de HandleBarsJS (http://handlebarsjs.com/)
+
+### MochaJS
+
+Mocha es uno de los más importantes frameworks de testing de código fuente.
+Se instala mediante
+``` bash
+npm install --save-dev mocha
+```
+porque queremos instalarlo únicamente con propósitos de desarrollo.
+
+Nota: Ver Testing en NodeJS.
