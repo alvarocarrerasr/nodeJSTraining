@@ -374,3 +374,44 @@ Nota: ver apartado de Testing en NodeJS
 Rewire (https://www.npmjs.com/package/rewire) es un módulo que nos permite modificar el comportamiento de los módulos importados en Node, con el fin de testear nuestras aplicaciones.
 
 Nota: ver apartado de Testing en NodeJS
+
+## Bases de Datos NoSQL: MongoDB
+
+MongoDB es un Gestor de Bases de Datos no relacional, es decir, no tenemos una relación cabecera-tuplas, o lo que es lo mismo, los datos no se encuentran estructurados.
+
+Cada una de las entradas de una Base de Datos Mongo se denomina Documento y contienen una serie de atributos. Son bastante similares a un objeto JavaScript, en el sentido de que, al no tener una estructura específica debemos indicar para cada documento cada uno de los atributos o propiedades que este va a tener.
+
+``` bash
+El puerto por defecto de conexión con MongoDB es 27017.
+```
+
+Mongo se instala en su versión Community Server, desde https://www.mongodb.com. Descomprimimos el fichero y copiamos la carpeta que contiene, renombrada a mongo a $HOME. A continuación creamos una carpeta llamada mongo-data, también en $HOME.
+Una vez hayamos hecho esto ejecutaremos Mongo. Para ello, accedemos al directorio $HOME/mongo/bin y ejecutamos el servidor Mongo con:
+``` bash
+./mongod --dbpath="$HOME/mongo-data/"
+```
+De esta forma, la base de datos se almacenará en la path indicada en el argumento --dbpath.
+
+Para finalizar tenemos dos opciones, o bien ejecutar una consola de Mongo y escribir sobre la misma los comandos de I/O sobre la BBDD:
+
+``` bash
+./mongod
+```
+, o bien, podremos recurrir a Robomongo (https://robomongo.org/download), una aplicación que es básicamente una GUI del SGBD, de tal forma que nos permita realizar las consultas de una forma mucho más visual. Robomongo tampoco requiere instalación, basta con descomprimir el directorio.
+
+### Estructura de un documento.
+Por definición, una BBDD no relacional no tiene estructura, es decir, no hay un número de campos fijo que deban tener todos los documentos, sino que las propiedades se definen para cada uno. Sin embargo, todos contarán con un campo único, que actuará como clave del mismo (como la Primary Key en SQL), que es el ObjectID, que consiste en un código alfanumérico único.
+### Consultas en Mongo.
+
+Las consultas hasta ahora vistas son:
+* insert:
+```javascript
+db.BaseDatosPrueba.insert({text:"Hello World!"})
+```
+,que devuelve un objeto de tipo WriteResult, junto con el número de documentos insertados.
+
+* find:
+```javascript
+db.BaseDatosPrueba.find()
+```
+,que devuelve todas los documentos almacenados en ese nivel de la BBDD.
