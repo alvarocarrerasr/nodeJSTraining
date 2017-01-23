@@ -188,6 +188,28 @@ describe(StringDescripción,()=>{
 	//tests
 });
 ```
+### Spies
+
+Los spies son métodos que sustituyen a otros por motivos de testeo, son, de hecho, como "Man In The Middle" en programación, pues será una función que sustituya a la original, tomando todos los argumentos que a ella le pasen.
+
+Rewire nos permite fácilmente sustituir el funcionamiento de las funciones y, junto con Expect, que nos genera los spies, está todo hecho:
+
+```javascript
+var app = rewire("./app");
+var db = {
+	saveUser: expect.createSpy()
+}
+app.__set__('db',db);
+```
+El código anterior, coge el funcionamiento del módulo db importado en app y lo sustituye por las funciones que se encuentran en el objeto (saveUser). De esta forma, si llamamos ahora a db.saveUser(), obtendremos el comportamiento de expect.createSpy();
+
+Métodos de Expect que serán útiles:
+
+* expect(spy).toHaveBeenCalled(): el aserto será cierto sí y solo sí, el espía spy ha sido llamado.
+* expect(spy).toNotHaveBeenCalled(): lo contrario a lo anterior.
+* expect(spy).toHaveBeenCalledWith(args): el aserto será cierto sí y solo sí, el espía spy ha sido llamado con los argumentos args.
+* expect(spy).toNotHaveBeenCalledWith(args): lo contrario a lo anterior.
+
 ## Módulos en NPMJS
 NPMJS nos permite instalar módulos de terceros en nuestro proyecto NodeJS.
 Comandos:
@@ -336,3 +358,19 @@ npm install --save-dev mocha
 porque queremos instalarlo únicamente con propósitos de desarrollo.
 
 Nota: Ver Testing en NodeJS.
+
+### Expect
+Expect (https://github.com/mjackson/expect) es una librería de testing con muchísimas utilidades, que nos permite, entre otras cosas, hacer spies (funciones espía), agrupar tests y realizar los mismos tests.
+También permite testear funciones asíncronas.
+Se instala como:
+```bash
+npm install --save-dev expect
+```
+
+Nota: ver apartado de Testing en NodeJS
+
+### Rewire
+
+Rewire (https://www.npmjs.com/package/rewire) es un módulo que nos permite modificar el comportamiento de los módulos importados en Node, con el fin de testear nuestras aplicaciones.
+
+Nota: ver apartado de Testing en NodeJS
