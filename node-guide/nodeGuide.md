@@ -89,24 +89,9 @@ Contaremos con los siguientes comandos:
 
 * quit: para salir del debugger.
 
-## Módulos en NPMJS
-NPMJS nos permite instalar módulos de terceros en nuestro proyecto NodeJS.
-Comandos:
-* npm -v: retorna la versión de NodeJS instalada.
-
-* npm init: para iniciar el repositorio y poder usar NPM en el proyecto. Nos pedirá ciertos detalles como la versión del software, nombre o punto de entrada y terminará generando un fichero package.json, con esta configuración.
-
-* npm install [nombreMódulo]--save: para instalar un módulo de NPM en nuestro directorio y (--save) actualizar el fichero package.json, para poder utilizar nuestro nuevo módulo en nuestro directorio de NodeJS. ¡Ya podremos hacer un require()!. Instala los módulos en la carpeta node_modules, que se encuentra dentro de ..
-* npm install --save-dev [nombreMódulo]: para instalar un módulo de NPM en nuestro directorio y (--save) actualizar el fichero package.json. Nota: la bandera --save-dev indica que se instale con únicamente propósito de desarrollo, es decir, mientras el software se encuentre en fase de desarrollo. Por ejemplo, en Heroku, **no se instalarán**.
-* npm install: para volver a instalar los módulos listados en package.json (ver nota importante que hay a continuación).
-* npm install [nombreMódulo] -g: para instalar un módulo globalmente, esto es, que se va a utilizar en el contexto de Node. Instala los módulos en $HOME/node_modules.
-
-### Nota importante sobre la utilización de NPM
-Muy importante: la carpeta node_modules que genera NPM nunca se deberá compartir. Esto es debido a que incluye código ejecutable únicamente por el computador en el que se está ejecutando el proyecto, por lo que si deseamos compartir el proyecto deberemos borrar previamente esta carpeta.
-
-Una vez copiada, se podrá recuperar de nuevo todos los contenidos (y volver a compilar el código para nuestro ordenador) utilizando el comando npm install (sin más argumentos), que buscará en el fichero package.json las dependencias a instalar.
-
 ## Testing en NodeJS
+
+### Aserción con MochaJS
 
 Para testear nuestro código utilizaremos el framework MochaJS. MochaJS nos permitirá ejecutar los tests de forma automática, de tal forma que, a medida que añadimos nuevo código a nuestro desarrollo, resultará muy sencillo testearlo, sin tener que pensar caso por caso.
 ```bash
@@ -158,6 +143,42 @@ npm run test-watch
 ```
 
 De esta forma automatizaremos totalmente nuestros tests.
+
+### Librerías de aserción
+
+El problema fundamental de utilizar Mocha es que se duplica mucho código. Todo esto se puede hacer de una manera muy sencilla con una librería de aserción, como es Expect (https://github.com/mjackson/expect) e instalable, al igual que con Mocha con
+```bash
+npm install --save-dev expect
+```
+Expect incluye ya numerosos métodos que nos van a permitir asertar que dos valores son iguales, equivalentes, diferentes e incluso, si está contenido (caso de objetos). Los métodos más importantes son:
+
+* expect(obj0).toBe(obj1); : solo es válido si obj0 es exactamente igual a obj1. **Atención:** cuidado con los objetos, al igual que pasa en Java. Comprueba obj0 == obj1.
+* expect(obj0).toNotBe(obj1):  solo es válido si obj0 no es exactamente igual a obj1.
+* expect(obj0).toEqual(obj1); : solo es válido si obj0 es igual a obj1. **Se utilizará en objetos, al igual que pasa en Java**.
+* expect(obj0).toNotEqual(obj1):  solo es válido si obj0 no es igual a obj1.
+* expect(obj0).toBeA("string"): comprueba que obj0 es de tipo string, lo mismo para el caso de number, boolean... Similarmente, si en vez de recibir como parámetro un String, recibiera un constructor, comprobaría que obj0 fuera instancia de ese constructor.
+* expect(obj0).toNotBeA("string"): lo contrario al caso anterior.
+* expect(obj0).toInclude(obj1): comprueba que el objeto obj1 esté contenido en obj0, por ejemplo, en el caso de que obj0 fuera un array. En el caso de que fuera un objeto comprobaría que las propiedades de obj1 estuvieran contenidas en obj0.
+* expect(obj0).toExclude(obj1): lo contrario a lo anterior.
+
+
+Recordar que se ejecutan los test exactamente igual que en el caso anterior con Mocha (npm test) y el fichero package.json contendrá la misma información (excepto que ahora tenemos el módulo Expect instalado en las dependencias de desarrollo).
+## Módulos en NPMJS
+NPMJS nos permite instalar módulos de terceros en nuestro proyecto NodeJS.
+Comandos:
+* npm -v: retorna la versión de NodeJS instalada.
+
+* npm init: para iniciar el repositorio y poder usar NPM en el proyecto. Nos pedirá ciertos detalles como la versión del software, nombre o punto de entrada y terminará generando un fichero package.json, con esta configuración.
+
+* npm install [nombreMódulo]--save: para instalar un módulo de NPM en nuestro directorio y (--save) actualizar el fichero package.json, para poder utilizar nuestro nuevo módulo en nuestro directorio de NodeJS. ¡Ya podremos hacer un require()!. Instala los módulos en la carpeta node_modules, que se encuentra dentro de ..
+* npm install --save-dev [nombreMódulo]: para instalar un módulo de NPM en nuestro directorio y (--save) actualizar el fichero package.json. Nota: la bandera --save-dev indica que se instale con únicamente propósito de desarrollo, es decir, mientras el software se encuentre en fase de desarrollo. Por ejemplo, en Heroku, **no se instalarán**.
+* npm install: para volver a instalar los módulos listados en package.json (ver nota importante que hay a continuación).
+* npm install [nombreMódulo] -g: para instalar un módulo globalmente, esto es, que se va a utilizar en el contexto de Node. Instala los módulos en $HOME/node_modules.
+
+### Nota importante sobre la utilización de NPM
+Muy importante: la carpeta node_modules que genera NPM nunca se deberá compartir. Esto es debido a que incluye código ejecutable únicamente por el computador en el que se está ejecutando el proyecto, por lo que si deseamos compartir el proyecto deberemos borrar previamente esta carpeta.
+
+Una vez copiada, se podrá recuperar de nuevo todos los contenidos (y volver a compilar el código para nuestro ordenador) utilizando el comando npm install (sin más argumentos), que buscará en el fichero package.json las dependencias a instalar.
 
 ### Módulos interesantes de NPM
 #### Lodash
