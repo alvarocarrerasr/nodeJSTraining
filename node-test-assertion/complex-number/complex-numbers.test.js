@@ -12,7 +12,7 @@ it is a function BDD Behaviour Driven Development,
 */
 
 const MAXVALUE = 10;
-const NUMTESTS = 600;
+const NUMTESTS = 0;
 
 for (var i = 0 ; i < NUMTESTS ; i++){
   it("Compr núm 1 cuadrante",()=>{

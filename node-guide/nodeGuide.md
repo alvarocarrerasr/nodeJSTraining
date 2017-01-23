@@ -163,6 +163,31 @@ Expect incluye ya numerosos métodos que nos van a permitir asertar que dos valo
 
 
 Recordar que se ejecutan los test exactamente igual que en el caso anterior con Mocha (npm test) y el fichero package.json contendrá la misma información (excepto que ahora tenemos el módulo Expect instalado en las dependencias de desarrollo).
+
+### Testing en aplicaciones asíncronas
+En el caso de aplicaciones asíncronas no debemos entender que Expect se amolde inmediatamente a ella, ya que por defecto entenderá que la respuesta es correcta y el test no servirá de nada. Para ello, habrá que ejecutar la función done(), por medio de una callback, por ejemplo:
+
+```javascript
+it("DESCRIPCIÓN",(done)=>{
+  /* EL RESULTADO QUE DEBERÍA SER
+	var res=3;
+	*/
+  number.getArgument((answer)=>{
+    expect(answer).toBe(res);
+    done();
+  })
+});
+```
+Del código anterior, se destaca la función cuyo único argumento es done, que será la función que se ejecute cuando la función callback se haya ejecutado correctamente.
+
+Cuando veamos el resultado del test, si los tiempos de respuesta son muy altos, veremos estos en color rojo. Esto sirve para indicar que quizá haya algún error (por la gran cantidad de tiempo empleada), aunque en el ejemplo que se encuentra en el código fuente esto es debido a que uso la función setTimeout().
+
+Podremos agrupar los tests mediante la función describe:
+```javascript
+describe(StringDescripción,()=>{
+	//tests
+});
+```
 ## Módulos en NPMJS
 NPMJS nos permite instalar módulos de terceros en nuestro proyecto NodeJS.
 Comandos:
@@ -183,8 +208,9 @@ Una vez copiada, se podrá recuperar de nuevo todos los contenidos (y volver a c
 ### Módulos interesantes de NPM
 #### Lodash
 Lodash (https://lodash.com/docs/) es un interesante módulo de NPM que cuenta con una gran cantidad de utilidades.
-	npm install lodash --save
-
+```bash
+npm install lodash --save
+```
 #### Nodemon.
 Nodemon (https://www.npmjs.com/package/nodemon) es un módulo que sirve para actualizar Node cada vez que hagamos un cambio en nuestro código. Resulta muy útil para no tener que ir parando NodeJS y volviendo a arrancar. Se instala con la bandera -g (--global).
 
@@ -193,7 +219,9 @@ Nodemon (https://www.npmjs.com/package/nodemon) es un módulo que sirve para act
 nodemon [fichero.js]
 ```
 * Instalación de Nodemon:
+```bash
 npm install nodemon -g
+```
 Nota: Me ha hecho falta ejecutarlo con sudo. Por lo visto, es un error bastante común y se debe a que hay directorios que no tienen suficientes permisos. Se soluciona con sudo chown -R $USER /usr/local
 
 #### Yargs
