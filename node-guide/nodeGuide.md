@@ -455,6 +455,41 @@ db.BaseDatosPrueba.find()
 ```
 ,que devuelve todas los documentos almacenados en ese nivel de la BBDD.
 
+Ejemplo de código Node que busca un documento en la BBDD:
+
+```javascript
+const {MongoClient} = require("mongodb");
+
+MongoDB.connect(dbDetails,(error,db)=>{
+	if(error) //Tratamiento del error
+	else {
+		db.collection(/*collection name */).find(/*FILTRO*/).toArray().then(
+			(docs)=>{
+				//successfully data
+			},
+			(error)=>{
+				//Tratamiento error
+			}
+		)
+		db.close();
+	}
+})
+```
+
+De esta forma, podemos encontrar cualquier dato en la Base de Datos, el filtro indicado es simplemente un objeto JS con la propiedad que queremos comprobar.
+Así pues, un filtro:
+```javascript
+const {ObjectID} = require("mongodb");
+{
+	_.id: new ObjectID("ObjectID que queremos buscar");
+}
+```
+nos permitirá encontrar el objeto cuyo identificador (ObjectID) es el que hemos indicado.
+
+**Nota importante**
+La función find(/*FILTRO*/) nos devuelve un cursor (http://mongodb.github.io/node-mongodb-native/2.2/api/Cursor.html), es decir, es simplemente un puntero hacia el lugar de la Base de Datos donde se encuentra el documento que buscamos. La ventaja de que aquí nos devuelva el cursor es que es mucho más fácil implementar determinadas funciones, como la devolución de la información en formato array (ya visto, con el método toArray()), o incluso los métodos count(), min(), max().
+Similarmente, en la documentación de MongoDB (https://docs.mongodb.com/manual/reference/operator/query-comparison/) podemos encontrar muchos comparadores que pueden resultar muy útiles en las consultas.
+
 ### ObjectID en MongoDB
 
 ObjectID es un código alfanumérico que identifica de manera única al documento en concreto. Se diseñó así, en vez de ser autoincremental para facilitar la escalabilidad, ya que así, no es necesario que los diversos servidores que dan soporte a nuestra BBDD se tengan que sincronizar para tener una clave autoincremental.
@@ -467,3 +502,14 @@ Las partes de un ObjectID, de doce dígitos son:
 * Los siguientes tres bytes son un valor aleatorio.
 
 Si bien es verdad que lo normal es dejar a Mongo que cree el identificador (así además, garantizamos la unicidad del mismo), es posible indicarlo nosotros mismos, añadiendo esa propiedad (_ .id) al objeto cuando se ejecute el método InsertOne.
+
+MongoDB native Client también nos permite generar de manera única ID's sin necesidad de tener que usar una BBDD Mongo. Es tan fácil como utilizar la función ObjectID, que es una propiedad de MongoDB:
+```javascript
+const {ObjectID} = require("mongodb");
+var obj = new ObjectID();
+```
+### Cerrar la BBDD
+Al igual que ocurre en cualquier lenguaje de programación con ficheros, consultas HTTP, BBDD... es necesario cerrar la BBDD, sino el proceso estará a la espera de nuevas consultas.
+```javascript
+db.close();
+```
