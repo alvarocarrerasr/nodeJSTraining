@@ -375,6 +375,19 @@ Rewire (https://www.npmjs.com/package/rewire) es un módulo que nos permite modi
 
 Nota: ver apartado de Testing en NodeJS
 
+Instalación:
+```bash
+npm install --save-dev rewire
+```
+### Node MongoDB Native
+
+https://github.com/mongodb/node-mongodb-native (Node MongoDB Native) es el conector oficial de Mongo para NodeJS.
+Tiene una documentación muy buena accesible desde el mismo proyecto de GitHub.
+Instalación:
+```bash
+npm install mongodb --save
+```
+
 ## Bases de Datos NoSQL: MongoDB
 
 MongoDB es un Gestor de Bases de Datos no relacional, es decir, no tenemos una relación cabecera-tuplas, o lo que es lo mismo, los datos no se encuentran estructurados.
@@ -400,18 +413,57 @@ Para finalizar tenemos dos opciones, o bien ejecutar una consola de Mongo y escr
 , o bien, podremos recurrir a Robomongo (https://robomongo.org/download), una aplicación que es básicamente una GUI del SGBD, de tal forma que nos permita realizar las consultas de una forma mucho más visual. Robomongo tampoco requiere instalación, basta con descomprimir el directorio.
 
 ### Estructura de un documento.
-Por definición, una BBDD no relacional no tiene estructura, es decir, no hay un número de campos fijo que deban tener todos los documentos, sino que las propiedades se definen para cada uno. Sin embargo, todos contarán con un campo único, que actuará como clave del mismo (como la Primary Key en SQL), que es el ObjectID, que consiste en un código alfanumérico único.
+Por definición, una BBDD no relacional no tiene estructura, es decir, no hay un número de campos fijo que deban tener todos los documentos **(un conjunto de documentos se denomina colección)**, sino que las propiedades se definen para cada uno. Sin embargo, todos contarán con un campo único, que actuará como clave del mismo (como la Primary Key en SQL), que es el ObjectID, que consiste en un código alfanumérico único.
 ### Consultas en Mongo.
 
 Las consultas hasta ahora vistas son:
 * insert:
+
+MongoDB Command:
 ```javascript
 db.BaseDatosPrueba.insert({text:"Hello World!"})
 ```
 ,que devuelve un objeto de tipo WriteResult, junto con el número de documentos insertados.
 
+Ejemplo de código Node que inserta el objeto en la BBDD:
+
+```javascript
+const mongodb = require("mongodb").MongoClient;
+const mongoURL="mongodb://localhost:27017/Test";
+
+mongodb.connect(mongoURL,function(error,db){
+	if(error)//Tratamiento error
+	else
+	//DB es el objeto de BBDD, sobre el que podemos tratar.
+	db.collection("nombreColección").insertOne(objToInsert,function (error,result){
+		if(error) //Tratamiento del error
+		else {
+			//result.ops contiene el objeto insertado
+		}
+	})
+}
+);
+```
+
+**Nota**
+```bash
+A diferencia de otro tipo de Bases de Datos, por ejemplo MySQL, Mongo no necesita que primero exista la base de datos sobre la que se escribe, sino que la crea "al vuelo".
+```
 * find:
 ```javascript
 db.BaseDatosPrueba.find()
 ```
 ,que devuelve todas los documentos almacenados en ese nivel de la BBDD.
+
+### ObjectID en MongoDB
+
+ObjectID es un código alfanumérico que identifica de manera única al documento en concreto. Se diseñó así, en vez de ser autoincremental para facilitar la escalabilidad, ya que así, no es necesario que los diversos servidores que dan soporte a nuestra BBDD se tengan que sincronizar para tener una clave autoincremental.
+
+Las partes de un ObjectID, de doce dígitos son:
+
+* Los cuatro primeros bytes es un timestamp, de tal forma que identifica de manera única el instante de tiempo en el que fue creado. Podemos obtener el timestamp concreto ejecutando la función getTimestamp() sobre la propiedad _ .id.
+* Los siguientes tres bytes son el identificador de la máquina sobre el que fue creado.
+* Los siguientes dos bytes son el número de proceso  sobre el que fue creado.
+* Los siguientes tres bytes son un valor aleatorio.
+
+Si bien es verdad que lo normal es dejar a Mongo que cree el identificador (así además, garantizamos la unicidad del mismo), es posible indicarlo nosotros mismos, añadiendo esa propiedad (_ .id) al objeto cuando se ejecute el método InsertOne.

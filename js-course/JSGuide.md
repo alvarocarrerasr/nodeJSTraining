@@ -43,6 +43,15 @@ var var2={
 };
 ```
 
+### Creación de variables a partir de propiedades de objetos
+
+ES6 nos propone una forma de extraer o crear una variable a partir de una propiedad de un objeto:
+Por ejemplo:
+```javascript
+var user = {name:"Álvaro",surname:"Carreras"};
+var {name} = user;
+```
+
 ## Closures and Callbacks
 (pendiente)
 ## Programación funcional en JS
