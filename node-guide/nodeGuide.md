@@ -387,7 +387,16 @@ Instalación:
 ```bash
 npm install mongodb --save
 ```
+### Mongoose
+Mongoose es un framework que nos permite utilizar muy fácilmente bases de datos Mongo con NodeJS.
 
+Instalación:
+
+```bash
+npm install mongoose --save
+```
+
+Nota: ver apartado correspondiente.
 ## Bases de Datos NoSQL: MongoDB
 
 MongoDB es un Gestor de Bases de Datos no relacional, es decir, no tenemos una relación cabecera-tuplas, o lo que es lo mismo, los datos no se encuentran estructurados.
@@ -566,6 +575,7 @@ Las operaciones anteriores si no se les proporciona un cuarto argumento (callbac
 	* updateOne(filter,update,options...): similar al primero (findOneAndUpdate), pero este no requiere un bloqueo.
 
 Las operaciones anteriores, al igual que en el caso de delete, si no se les proporciona un cuarto argumento (callback), devuelven una Promise.
+
 **Nota importante**:
 Son necesarios los operadores de actualización (https://docs.mongodb.com/manual/reference/operator/update-field/), para el campo de update. En caso de no utilizarlos, podríamos perder la información almacenada en ese documento.
 
@@ -592,3 +602,117 @@ Al igual que ocurre en cualquier lenguaje de programación con ficheros, consult
 ```javascript
 db.close();
 ```
+
+## Mongoose
+
+Mongoose es un fantástico framework que nos permitirá gestionar aún mejor los documentos en una base de datos Mongo. Mongoose permite la creación de Modelos, validación...
+
+Documentación: http://mongoosejs.com/docs/guide.html
+
+### Un primer ejemplo de Mongoose
+```javascript
+const mongoose = require("mongoose");
+
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb://localhost:27017/TodoApp");
+```
+En las líneas anteriores podemos ver que es recomendable indicar que queremos usar las Promises de JavaScript y no unas de terceros. Esto es porque Mongoose se puede instalar en varias versiones de JavaScript y las Promises, en cuanto a Core se refiere, solo están implementadas en las últimas versiones del lenguaje de programación.
+
+A continuación, podremos, por ejemplo, definir un modelo:
+```javascript
+var Tarea = mongoose.model("NOMBRE DE LA COLECCIÓN",
+{
+  title:{
+    type : String
+  },
+  description:{
+    type : String
+  },
+  completed:{
+    type : Boolean
+  },
+  completedAt:{
+    type : Number
+  }
+});
+```
+**Importante:** Mongoose, creará una nueva colección en la BBDD, con el nombre que hayamos estipulado al modelo (primer argumento), con el nombre en minúsucula y pluralizado, esto es, si la colección se llama "Nota", creará una nueva colección que se llame "notas".
+
+Seguidamente, podemos crear un nuevo documento, utilizando el modelo:
+```javascript
+var anotherTodo = new Tarea({
+  title:"This is another Todo Example",
+  description:"Hey there!",
+  completed:true,
+  completedAt:(new Date()).getTime()
+});
+```
+
+Para finalizar guardándola en la Base de Datos, utilizando una Promise:
+```javascript
+anotherTodo.save().then(
+  (result)=>{
+    console.log(result);
+  },
+  (error)=>{
+    console.log(error);
+  }
+);
+```
+Concluimos, cerrando la conexión:
+```javascript
+mongoose.disconnect();
+```
+
+### Mongoose con Validación, Tipos y Valores por defecto
+
+#### Schemas en Mongoose:
+A diferencia de un Modelo (que nos permiten interactuar con los datos), los Schemas (http://mongoosejs.com/docs/guide.html) definirán parte o un documento de forma completa, de tal forma que podamos añadir propiedades adicionales como obligación de tipos, validación... En definitiva, estamos pasando un Schema en el segundo argumento de creación de un modelo.
+
+A su vez, también podremos indicar que :
+* se realicenciertas operaciones (http://mongoosejs.com/docs/schematypes.html) a los valores como trim, que elimina los caracteres en blanco en las últimas posiciones:
+	``` javascript
+	title:{
+		type : String,
+		required: true,
+		trim: true
+	}
+	```
+* se tome un valor por defecto:
+	```javascript
+	completed:{
+		type : Boolean,
+		default: false
+	}
+	```
+	etcétera...
+#### Validación en Mongoose
+Validar en Mongoose (http://mongoosejs.com/docs/validation.html), puede llegar a resultar muy útil. A diferencia de una BBDD como MySQL, en la que debemos indicar el tipo, longitud (por ejemplo, caso de TEXT o VARCHAR)... Una base de datos no relacional no permite, por ejemplo, comprobar estas propiedades, por lo que, en ese caso estamos perdiendo caracterísitcas bastante comunes en un software de gestión de datos.
+Mongoose soluciona estos problemas añadiendo los validadores, que nos permitirán comprobar estos datos, antes de que sean guardados, por lo que en caso de que no cumplan con la condición estipulada, Mongoose devolverá un error.
+Mongoose viene con algunos validadores por defecto, por ejemplo, dependiendo del tipo de dato almacenado:
+* Números: podemos comprobar que el número sea mayor o menor de determinado valor.
+* Strings: tamaño de la cadena de caracteres (mayor o menor), igualdad a un valor...
+
+También podremos definir la obligación de un valor, con el parámetro required:
+```javascript
+var TodoTask = mongoose.model("TodoApp Task",
+{
+  title:{
+    type : String,
+    required: true
+  },
+  description:{
+    type : String,
+    required: true
+  },
+  completed:{
+    type : Boolean,
+    required: true
+  },
+  completedAt:{
+    type : Number
+  }
+});
+```
+
+Además, nos permite definir nuestros propios validadores.
