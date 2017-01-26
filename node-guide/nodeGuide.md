@@ -490,6 +490,85 @@ nos permitirá encontrar el objeto cuyo identificador (ObjectID) es el que hemos
 La función find(/*FILTRO*/) nos devuelve un cursor (http://mongodb.github.io/node-mongodb-native/2.2/api/Cursor.html), es decir, es simplemente un puntero hacia el lugar de la Base de Datos donde se encuentra el documento que buscamos. La ventaja de que aquí nos devuelva el cursor es que es mucho más fácil implementar determinadas funciones, como la devolución de la información en formato array (ya visto, con el método toArray()), o incluso los métodos count(), min(), max().
 Similarmente, en la documentación de MongoDB (https://docs.mongodb.com/manual/reference/operator/query-comparison/) podemos encontrar muchos comparadores que pueden resultar muy útiles en las consultas.
 
+* delete: para borrar documentos en NodeJS contamos con varios métodos:
+	* deleteMany: para borrar varios documentos a la vez.
+	```javascript
+	db.collection("todos").deleteMany({}).then(
+	  (result)=>{
+	    console.log(result);
+	  },
+	  (error)=>{
+	    console.log(error);
+	  }
+	);
+	```
+	* deleteOne: solo para borrar un solo documento.
+	```javascript
+	db.collection("todos").deleteOne({}).then(
+	  (result)=>{
+	    console.log(result.result);
+	  },
+	  (error)=>{
+	    console.log(error);
+	  }
+	);
+	```
+	* findOneAndDelete: permite borrar un solo documento, pero antes devuelve ese valor. **Muy similar a la operación pop de una pila**.
+	```javascript
+	db.collection("todos").findOneAndDelete({}).then(
+	  (result)=>{
+	    console.log(result);
+	  },
+	  (error)=>{
+	    console.log(error)
+	  }
+	);
+	```
+Las operaciones anteriores si no se les proporciona un cuarto argumento (callback), devuelven una Promise.
+
+* update: la actualización de documentos es la tercera operación más importante. Contamos con varios métodos que nos permiten realizarla, al igual que teníamos en el caso de la eliminación:
+	* findOneAndUpdate(filter,update,options...): busca un único documento que cumpla el filtro y lo actualiza, dependiendo de las condiciones impuestas en update. Devuelve el documento antes de ser modificado.
+	```javascript
+	const {MongoClient, ObjectID} = require("mongodb");
+
+	const dbName="";
+	const dbURL="mongodb://localhost:27017/"
+
+
+	MongoClient.connect(`${dbURL}${dbName}`,(err, db)=>{
+	  if(err){
+	    console.log("Error while connecting to DB Server");
+	    return;
+	  }
+	    console.log("Connected successfully to DB Server");
+
+	    db.collection("todos").findOneAndUpdate(
+	      {_id:new ObjectID("588731d2c41e13104fc79df1")},
+	      {
+	        $set:{
+	          Universidad:"Universidad de Valladolid"}
+	        }
+	    ).then(
+	      (result)=>{
+	        console.log(result);
+	      },
+	      (error)=>{
+	        console.log(error);
+	      }
+	    );
+	    db.close();
+	});
+	```
+	**Importante**:
+	ver el uso del operador de actualización $set (explicado en nota importante más abajo).
+
+	* updateMany(filter,update,options...): similar al anterior, pero actualiza todos los documentos que cumplen el filtro
+	* updateOne(filter,update,options...): similar al primero (findOneAndUpdate), pero este no requiere un bloqueo.
+
+Las operaciones anteriores, al igual que en el caso de delete, si no se les proporciona un cuarto argumento (callback), devuelven una Promise.
+**Nota importante**:
+Son necesarios los operadores de actualización (https://docs.mongodb.com/manual/reference/operator/update-field/), para el campo de update. En caso de no utilizarlos, podríamos perder la información almacenada en ese documento.
+
 ### ObjectID en MongoDB
 
 ObjectID es un código alfanumérico que identifica de manera única al documento en concreto. Se diseñó así, en vez de ser autoincremental para facilitar la escalabilidad, ya que así, no es necesario que los diversos servidores que dan soporte a nuestra BBDD se tengan que sincronizar para tener una clave autoincremental.
