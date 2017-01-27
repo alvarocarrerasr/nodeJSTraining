@@ -47,7 +47,7 @@ app.get("/todos/:id",(req,res)=>{
         sendData(result,res); // I should use a fuction because of the Promise.
       },
       (error)=>{
-        res.statusCode(500).send("Error while trying to request data");
+        res.status(500).send("Error while trying to request data");
       }
     );
   }else{
@@ -58,6 +58,26 @@ app.get("/todos/:id",(req,res)=>{
 });
 
 
+
+app.delete("/todos",(req,res)=>{
+  console.log(req.method, req.originalUrl,req.get('Content-Type'));
+  res.send(removeContents({}))
+});
+
+app.delete("/todos/:id",(req,res)=>{
+  console.log(req.method, req.originalUrl,req.get('Content-Type'));
+  const query = req.params.id;
+  if (ObjectId.isValid(query)){
+    removeContents({_id:query})
+    res.send({"status":"OK","Operation":"Remove","Description":"Operation performed successfully"});
+  }else{
+    res.status(404).send("Element not found");
+  }
+});
+
+
+
+
 app.listen(PORT,()=>{
   console.log("App listening on port",PORT);
 });
@@ -66,13 +86,22 @@ module.exports={
   app
 };
 
+var removeContents = (query)=>{
+  TodoTask.remove(query).then(
+    (corr)=>{
+      return corr;
+    },
+    (err)=>{
+      return err;
+    }
+  )
+};
 
 var sendData = (dataToReturn,res)=>{
   if(!dataToReturn){
     res.status(404).send("TodoTask not found. Please check if ID is not misspelt!");
     return;
   }
-  console.log(typeof res.send);
   res.send(dataToReturn);
 }
 
