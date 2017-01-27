@@ -5,6 +5,12 @@ Una de las cosas más importantes es que no hay un orden predefinido or el momen
 
 Obviamente, la guía puede contener errores. En ese caso, te agradecería que abrieras una issue desde la opción correspondiente del repositorio.
 
+
+Links adicionales recomendados:
+
+* PostMan (https://www.getpostman.com/): es un software gratuito que nos permite probar APIS, realizando las sucesivas solicitudes HTTP que deseemos contra una URL.
+* Robomongo (https://robomongo.org/): es una GUI que nos permite visualizar la información almacenada en una base de datos Mongo, así como realizar consultas como modificación, creación y borrado de documentos.
+
 ## Características de Node JS
 * I/O no bloqueante.
 * Una fantástica comunidad de desarrolladores en www.npmjs.com
@@ -397,6 +403,18 @@ npm install mongoose --save
 ```
 
 Nota: ver apartado correspondiente.
+
+### BodyParser
+
+BodyParser (https://www.npmjs.com/package/body-parser) nos permite parsear el cuerpo de las solicitudes HTTP para procesarlas como objetos y así, acceder de una manera mucho más sencilla a la información.
+Resulta muy útil para elaborar una API, como un middleware, junto con el framework ExpressJS.
+
+Instalación:
+```bash
+npm install body-parser --save
+```
+
+
 ## Bases de Datos NoSQL: MongoDB
 
 MongoDB es un Gestor de Bases de Datos no relacional, es decir, no tenemos una relación cabecera-tuplas, o lo que es lo mismo, los datos no se encuentran estructurados.
