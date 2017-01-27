@@ -1,10 +1,13 @@
 /*
 File to configure mongoose in all program files
 */
-var mongoose = require("mongoose");
+var
+ mongoose = require("mongoose");
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost:27017/TodoApp");
+const username = "";
+const passw = "";
+mongoose.connect(`mongodb://${username}:${passw}@ds055925.mlab.com:55925/tasksmongodbnode`);
 
 module.exports = {
   mongoose

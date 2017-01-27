@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 
-const TodoTask = mongoose.model("TodoApp Task",
+const TodoTask = mongoose.model("TodoAppTask",
 {
   title:{
     type : String,

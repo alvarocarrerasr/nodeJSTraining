@@ -10,6 +10,8 @@ Links adicionales recomendados:
 
 * PostMan (https://www.getpostman.com/): es un software gratuito que nos permite probar APIS, realizando las sucesivas solicitudes HTTP que deseemos contra una URL.
 * Robomongo (https://robomongo.org/): es una GUI que nos permite visualizar la información almacenada en una base de datos Mongo, así como realizar consultas como modificación, creación y borrado de documentos.
+* mLab (https://mlab.com/): una plataforma SaaS que nos ofrece bases de datos Mongo gratuitas.
+* Heroku (https://dashboard.heroku.com/) nos va a permitir tener instancias de máquinas virtuales donde alojar nuestros proyectos Node.
 
 ## Características de Node JS
 * I/O no bloqueante.
@@ -734,3 +736,63 @@ var TodoTask = mongoose.model("TodoApp Task",
 ```
 
 Además, nos permite definir nuestros propios validadores.
+
+#### La importancia de los modelos en Mongoose
+Con un modelo en Mongoose podemos realizar todas las operaciones sobre documentos del mismo, como:
+* listar:
+	```javascript
+	TodoTask.findOne({
+	  _id : new ObjectId(id)
+	}).then(
+	  (doc)=>{
+	    console.log(doc);
+	  },
+	  (error)=>{
+	    console.log(error);
+	  }
+	);
+	```
+* buscar por ID (el identificador del documento): es, de hecho, más recomendable utilizar este método que listando por _ id (caso anterior):
+	```javascript
+	TodoTask.findById(id).then(
+	  (doc)=>{
+	    console.log(doc);
+	  },
+	  (error)=>{
+	    console.log(error);
+	  }
+	);
+	```
+	**Nota importante:**: tanto si buscamos por ID, como si listamos (e incluso si queremos filtrar usando otro campo), si el elemento no existe, no se retorna un error, sino null o undefined, por lo que tendremos que añadir un if.
+	Ejemplo:
+	```javascript
+	TodoTask.findById(id).then(
+	  (doc)=>{
+	    if(!doc){
+	      console.log("ID not found");
+	      return;
+	    }
+	    console.log(doc);
+	  },
+	  (error)=>{
+	    console.log(error);
+	  }
+	);
+	```
+* añadir nuevos documentos:
+	```javascript
+	var newTodo = new TodoTask({
+		title:req.body.title
+	});
+	newTodo.save().then(
+		(req)=>{
+			console.log(req);
+		},
+		(error)=>{
+			console.log(error);
+		}
+	)
+	```
+* borrar.
+
+Es decir, podremos ejecutar las mismas operaciones que teníamos con el conector oficial de Mongo, pero esta vez, enfocadas al tipo de documento.
