@@ -5,12 +5,38 @@ const {app} = require("./../server.js");
 const {TodoTask} = require("./../modules/Todo.js");
 const {User} = require("./../modules/User.js");
 
+const sampleTodos=[
+  {
+    title:"Test 0"
+  },
+  {
+    title:"Test 1"
+  },
+  {
+    title:"Test 2"
+  },
+]; /* We need sample data to populate the database*/
+
+
+
+
 beforeEach((done)=>{
   TodoTask.remove({}).then(()=>
   {
-    done();
   });
+
+  TodoTask.insertMany(sampleTodos).then(
+    ()=>{
+      done();
+    }
+  );
 });
+
+
+
+
+
+
 describe("POST /todos",()=>{
   it("It should create a new Todo",(done)=>{
     var title = "Test todo text";
@@ -22,8 +48,8 @@ describe("POST /todos",()=>{
         return done(err);
       }
       TodoTask.find().then((todos)=>{
-        expect(todos.length).toBe(1);
-        expect(todos[0].title).toBe(title);
+        expect(todos.length).toBe(4);
+        expect(todos[3].title).toBe(title);
         done();
       }).catch((e)=>done(e));
     });
@@ -44,9 +70,25 @@ describe("POST /todos",()=>{
       }
 
     TodoTask.find().then((todos)=>{
-        expect(todos.length).toBe(0);
+        expect(todos.length).toBe(3);
         done();
       }).catch((e)=>done(e));
     });
   });
+});
+
+describe("GET /todos",()=>{
+
+  it("It should return all saved Todos",(done)=>{
+    supertest(app).get("/todos").send()
+    .expect(200).expect((res)=>{
+
+        expect(res.body.length).toBe(4);
+        }
+      ).catch((e)=>done(e));
+      done();
+    });
+
+
+
 });
