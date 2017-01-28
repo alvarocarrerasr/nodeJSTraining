@@ -2,6 +2,7 @@ const {mongoose} = require("./db/mongoose-setup.js");
 const {TodoTask} = require("./modules/Todo.js");
 const {User} = require("./modules/User.js");
 const {ObjectId} = require("mongodb");
+const {authenticate} = require("./middleware/authenticate.js");
 
 const express = require("express");
 const bodyparser = require("body-parser");
@@ -12,37 +13,9 @@ var app = express();
 
 app.use(bodyparser.json());
 
-/*var authenticate = (req,res,next)=>{
-  var token = req.header("x-auth");
-
-  User.findByToken(token).then(
-    (user)=>{
-    if (!user){
-      return Promise.reject();
-    }
-    req.user = user;
-    req.token = token;
-  }).catch((e)=>{
-    res.status(401).send();
-  });
-};*/
-
-app.get("/users/me",(req,res)=>{
-  var token = req.header("x-auth");
-
-  User.findByToken(token).then(
-    (user)=>{
-    if (!user){
-      return Promise.reject();
-    }
-    res.send(user);
-  }).catch((e)=>{
-    res.status(401).send();
-  });
+app.get("/users/me",authenticate,(req,res)=>{
+  res.send(req.user);
 });
-
-
-
 
 /*
   Method to add a single TodoTask
