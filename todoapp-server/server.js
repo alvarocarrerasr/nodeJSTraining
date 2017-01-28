@@ -119,21 +119,11 @@ app.post("/user/newUser",(req,res)=>{
     password : requestData.password
   });
   newUser.save().then(
-    (success)=>{
-      res.send({
-        status:"OK",
-        result:"User was created successfully",
-        email:requestData.email
-      });
-    },
-    (error)=>{
-      res.status(400).send({
-        status:"Failed!",
-        result:"Bad Request!. Perhaps email is already registered.",
-        email:requestData.email
-      });
-    }
-  )
+    ()=>{
+      return newUser.generateAuthToken();
+    }).then((token)=>{
+    res.header('x-auth',token).send(newUser.toJSON());
+  }).catch((error)=>{res.status(400).send(error)});
 });
 
 

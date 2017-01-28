@@ -435,7 +435,28 @@ Instalación:
 ```bash
 npm install crypto-js --save
 ```
+Ejemplo:
+``` javascript
+const {SHA1} = require("crypto-js");
+var message = "";
 
+console.log(message);
+console.log("Hasheado:",SHA1(message).toString());
+```
+### JSON Web Token
+
+JSON Web Token (https://www.npmjs.com/package/jsonwebtoken) es un módulo NodeJS que nos va a permitir implementar de una forma bastante sencilla la idea sobre la que está basada el RFC7519 (https://tools.ietf.org/html/rfc7519), por el que se sugiere un método seguro y bastante moderno (Mayo de 2015) para la transferencia de información en formato JSON por medio de Internet.
+
+El funcionamiento más basico hará uso de una sal (una palabra que solo conoce el servidor)  y de un método de hashing, para comprobar que efectivamente la información transferida no ha sido manipulada en la transferencia.
+
+El módulo consiste en dos funciones: una para generar el token y otra para verificarlo.
+
+Más información del funcionamiento : https://jwt.io/introduction/
+
+Instalación
+```bash
+npm install jsonwebtoken --save
+```
 
 ## Bases de Datos NoSQL: MongoDB
 
