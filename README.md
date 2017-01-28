@@ -1,4 +1,4 @@
-# Learning the NodeJS basics
+# NodeJS Training
 
 This repository was created to mantain the source code of all the exercises and tests I make to learn NodeJS.
 

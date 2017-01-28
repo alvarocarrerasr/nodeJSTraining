@@ -53,9 +53,96 @@ var {name} = user;
 ```
 
 ## Closures and Callbacks
-(pendiente)
+* Closures: closures son funciones que retornan otras funciones. Por ejemplo:
+	```javascript
+	function raiz (indice){
+		return function (raiz){
+			return Math.pow(raiz,1/indice);
+		}
+	}
+
+	var raizCuadrada = raiz(2); /* Se ha creado un contexto de ejecucion en el que el índice queda instanciado a 2*/
+	var raizCuadradaDeDos = raiz(2,2); //1.41...
+
+	```
+* Callbacks: callbacks son funciones que se ejecutan cuando se ha efectuado una operación, son muy utilizadas en JavaScript para indicar, por ejemplo, cuándo una operación asíncrona se ha ejecutado. En las versiones más recientes, sustituiremos callbacks por Promises, ya que estas últimas permiten concatenar mucho mejor el tratamiento de errores.
+Además, las Promises solo pueden tener un estado (acierto/fallo).
+```javascript
+function suma(a,b, callback){
+	if (typeof a != Number || typeof b!= Number){
+		callback("Wrong arguments");
+	}else{
+		callback(undefined,(a+b));
+	}
+}
+
+suma(3,2,function (error,acierto){
+	if(!error){
+		console.log(acierto);
+		return;
+	}
+	console.log("Error",error);
+	}
+);
+```
+
 ## Programación funcional en JS
-(pendiente)
+Con el simple hecho de que en JS todas las funciones sean objetos, y estos pueden ser pasados por argumentos, la programación funcional se simplifica exponencialmente (a niveles que ya le gustaría a Haskell xDDD).
+Las tres operaciones más básicas de la programación funcional son map, filter and reduce:
+
+* map: Se utiliza para aplicar una cierta operación a todos los elementos de la colección.
+	```javascript
+	var array0=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+	function mapForEach(arr, funct){
+		var arrayToReturn=[];
+		for(var i=0;i<arr.length;i++){
+			arrayToReturn.push(funct(arr[i]));
+		}
+		return arrayToReturn;
+		}
+
+	var array2=mapForEach(array0,function(value){
+		return value*value;
+		});
+	```
+* filter: se utiliza para filtrar elementos de una colección, basándose en que cumplan una cierta condición.
+	```javascript
+	function filter(arr,func){
+	var arrayToReturn=[];
+	for(var i=0;i<arr.length;i++){
+		if(func(arr[i])) arrayToReturn.push(arr[i]);
+	}
+
+	return arrayToReturn;
+	}
+
+	var array0=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+	var array3=filter(array0,function(value){
+		if(value%2==0) return true;
+		return false;
+	} // array3 solo tendrá aquellos elementos de array0 que fueran pares.
+	);
+	```
+* reduce: se utiliza para devolver un único valor que viene determinado por los valores de la colección:
+```javascript
+function reduce(arr,func){
+var valueToReturn = 0;
+for(var i=0;i<arr.length;i++){
+	valueToReturn+=func(arr[i]);
+}
+
+return arrayToReturn;
+}
+
+var array0=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+var array4=reduce(array0,function(value){
+	if(value%2==0) return value;
+	return 0;
+} // array4 tendrá la suma de todos los elementos pares de la colección.
+);
+```
 ## Call, apply and bind
 Call, apply y bind son tres propiedades (en concreto, funciones) que tienen todos los objetos funciones en JavaScript:
 
@@ -109,6 +196,7 @@ y
 var raizQuinta=raiz.bind(this,5);
 ```
 Function Currying crea una copia de una función, fijando los argumentos que se hayan prefijado.
+
 ## JSON
 XML y JSON son dos formatos de transferencia de información por Internet. Sin embargo, el segundo es hoy en día mucho más usado que el primero porque este exige enviar mucha más información (la estructura se envía por duplicado).
 
