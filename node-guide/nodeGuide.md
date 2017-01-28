@@ -417,6 +417,25 @@ Instalación:
 npm install body-parser --save
 ```
 
+### Validator
+
+Validator (https://www.npmjs.com/package/validator) es un módulo de NodeJS que nos va a permitir validar distintos valores, como correos electrónicos, fechas, ISBNs, URLs...
+
+Instalación:
+```bash
+npm install validator --save
+```
+
+### Cryto-JS
+
+Cryto-JS (https://www.npmjs.com/package/crypto-js) es un módulo de NodeJS que nos va a permitir calcular Hashes, así como cifrar. Realmente es muy completo.
+
+
+Instalación:
+```bash
+npm install crypto-js --save
+```
+
 
 ## Bases de Datos NoSQL: MongoDB
 

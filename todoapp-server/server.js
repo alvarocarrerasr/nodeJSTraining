@@ -1,6 +1,6 @@
 const {mongoose} = require("./db/mongoose-setup.js");
 const {TodoTask} = require("./modules/Todo.js");
-const {User} = require("./modules/Todo.js");
+const {User} = require("./modules/User.js");
 const {ObjectId} = require("mongodb");
 
 const express = require("express");
@@ -12,6 +12,9 @@ var app = express();
 
 app.use(bodyparser.json());
 
+/*
+  Method to add a single TodoTask
+*/
 app.post("/todos",(req,resp)=>{
   console.log(req.method, req.originalUrl,req.get('Content-Type'));
   var newTodo = new TodoTask({
@@ -27,6 +30,9 @@ app.post("/todos",(req,resp)=>{
   )
 });
 
+/*
+  Method to retrieve every stored TodoTask
+*/
 app.get("/todos",(req,res)=>{
   listAllTodos(res);
 });
@@ -38,6 +44,8 @@ app.get("/todos",(req,res)=>{
   - Else if the id doesn't belongs to any item stored, it should return a 404 error.
   - Else if :id value is valid, it should return the document whose id is the one
   the user has specified within the HTTP Request.
+
+  Method to retrieve a single TodoTask, using its Document ID.
   */
 app.get("/todos/:id",(req,res)=>{
   console.log(req.method, req.originalUrl,req.get('Content-Type'));
@@ -58,13 +66,16 @@ app.get("/todos/:id",(req,res)=>{
 
 });
 
+/*
+   Method to show an error message, if patch request is not correct.
+*/
 app.patch("/todos",(req,res)=>{
   console.log(req.method, req.originalUrl,req.get('Content-Type'));
   res.status(400).send("Bad Request");
 })
 
 /*
-PATCH HTTP Method is used to perform an update operation
+   Method  to perform an update operation from a single document, using its document ID
 */
 app.patch("/todos/:id",(req,res)=>{
   console.log(req.method, req.originalUrl,req.get('Content-Type'));
@@ -98,12 +109,45 @@ app.patch("/todos/:id",(req,res)=>{
 });
 
 
+/*
+  Signup method
+*/
+app.post("/user/newUser",(req,res)=>{
+  const requestData = req.body;
+  var newUser = new User({
+    email: requestData.email,
+    password : requestData.password
+  });
+  newUser.save().then(
+    (success)=>{
+      res.send({
+        status:"OK",
+        result:"User was created successfully",
+        email:requestData.email
+      });
+    },
+    (error)=>{
+      res.status(400).send({
+        status:"Failed!",
+        result:"Bad Request!. Perhaps email is already registered.",
+        email:requestData.email
+      });
+    }
+  )
+});
 
+
+/*
+  Method to every stored note
+*/
 app.delete("/todos",(req,res)=>{
   console.log(req.method, req.originalUrl,req.get('Content-Type'));
   res.send(removeContents({}))
 });
 
+/*
+  Method to remove a single note using its document ID.
+*/
 app.delete("/todos/:id",(req,res)=>{
   console.log(req.method, req.originalUrl,req.get('Content-Type'));
   const query = req.params.id;
@@ -115,12 +159,6 @@ app.delete("/todos/:id",(req,res)=>{
   }
 });
 
-
-
-
-module.exports={
-  app
-};
 
 var removeContents = (query)=>{
   TodoTask.remove(query).then(
@@ -176,6 +214,10 @@ var listAllTodos = (res)=>{
 app.listen(PORT,()=>{
   console.log("App listening on port",PORT, " as ", (process.env.NODE_ENV || "production"));
 });
+
+module.exports={
+  app
+};
 
 /*
 IF I DO disconnect MONGOOSE, APP WON'T WORK

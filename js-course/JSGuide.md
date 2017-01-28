@@ -62,7 +62,7 @@ var {name} = user;
 	}
 
 	var raizCuadrada = raiz(2); /* Se ha creado un contexto de ejecucion en el que el índice queda instanciado a 2*/
-	var raizCuadradaDeDos = raiz(2,2); //1.41...
+	var raizCuadradaDeDos = raizCuadrada(2); //1.41...
 
 	```
 * Callbacks: callbacks son funciones que se ejecutan cuando se ha efectuado una operación, son muy utilizadas en JavaScript para indicar, por ejemplo, cuándo una operación asíncrona se ha ejecutado. En las versiones más recientes, sustituiremos callbacks por Promises, ya que estas últimas permiten concatenar mucho mejor el tratamiento de errores.
