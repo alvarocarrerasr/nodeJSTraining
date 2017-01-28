@@ -12,6 +12,7 @@ Links adicionales recomendados:
 * Robomongo (https://robomongo.org/): es una GUI que nos permite visualizar la información almacenada en una base de datos Mongo, así como realizar consultas como modificación, creación y borrado de documentos.
 * mLab (https://mlab.com/): una plataforma SaaS que nos ofrece bases de datos Mongo gratuitas.
 * Heroku (https://dashboard.heroku.com/) nos va a permitir tener instancias de máquinas virtuales donde alojar nuestros proyectos Node.
+* Yarn (https://yarnpkg.com/): el instructor del curso que hago en Udemy propone un gestor de paquetes llamado Yarn como alternativa a NPM. En la siguiente URL hay una serie de vídeos explicativos: http://www.mead.io/yarn/
 
 ## Características de Node JS
 * I/O no bloqueante.
@@ -737,7 +738,7 @@ var TodoTask = mongoose.model("TodoApp Task",
 
 Además, nos permite definir nuestros propios validadores.
 
-#### La importancia de los modelos en Mongoose
+#### La importancia de los modelos en Mongoose. operaciones y métodos.
 Con un modelo en Mongoose podemos realizar todas las operaciones sobre documentos del mismo, como:
 * listar:
 	```javascript
@@ -794,5 +795,30 @@ Con un modelo en Mongoose podemos realizar todas las operaciones sobre documento
 	)
 	```
 * borrar.
+	```javascript
+	TodoTask.remove(query).then(
+    (worked)=>{
 
+    },
+    (err)=>{
+
+    }
+  )
+	};
+	```
+* modificar:
+	```javascript
+	TodoTask.findByIdAndUpdate(query,{$set:{/*Data to modify*/}}).then(
+		(doc)=>{
+			if(doc){
+
+			}else{
+				//doc doesn't exist into database
+			}
+		},
+		(error)=>{
+			//doc couldn't be retrieved from database
+		}
+	);
+	```
 Es decir, podremos ejecutar las mismas operaciones que teníamos con el conector oficial de Mongo, pero esta vez, enfocadas al tipo de documento.

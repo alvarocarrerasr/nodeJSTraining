@@ -5,6 +5,7 @@ const {ObjectId} = require("mongodb");
 
 const express = require("express");
 const bodyparser = require("body-parser");
+const _ = require("lodash");
 
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -57,6 +58,45 @@ app.get("/todos/:id",(req,res)=>{
 
 });
 
+app.patch("/todos",(req,res)=>{
+  console.log(req.method, req.originalUrl,req.get('Content-Type'));
+  res.status(400).send("Bad Request");
+})
+
+/*
+PATCH HTTP Method is used to perform an update operation
+*/
+app.patch("/todos/:id",(req,res)=>{
+  console.log(req.method, req.originalUrl,req.get('Content-Type'));
+  const query = req.params.id;
+  const stuffToUpdate = {$set :_.pick(req.body,
+    ["title","description"])};
+  //We don't want user changing the task id as well as the timestamp.
+  var timestamp = 0;
+
+  if(ObjectId.isValid(query)){
+    TodoTask.findByIdAndUpdate(query,stuffToUpdate).then(
+      (doc)=>{
+        if(doc){
+          timestamp = doc.completedAt;
+          if(_.isBoolean(req.body.completed) && req.body.completed){
+            //if task is completed, we should set as it.
+            setAsCompleted(timestamp,query);
+          }
+          res.send(doc);
+        }else{
+          res.status(404).send("Task not found!");
+        }
+      },
+      (error)=>{
+        res.status(500).send("Task couldn't be retrieved due to a database error");
+      }
+    );
+  }else{
+    res.status(404).send("Task not found!");
+  }
+});
+
 
 
 app.delete("/todos",(req,res)=>{
@@ -77,10 +117,6 @@ app.delete("/todos/:id",(req,res)=>{
 
 
 
-
-app.listen(PORT,()=>{
-  console.log("App listening on port",PORT);
-});
 
 module.exports={
   app
@@ -103,7 +139,28 @@ var sendData = (dataToReturn,res)=>{
     return;
   }
   res.send(dataToReturn);
-}
+};
+
+var setAsCompleted = (timestamp,id)=>{
+  var currentTimestamp = (new Date()).getTime();
+  if(!timestamp){
+    TodoTask.findOneAndUpdate(id,{
+      $set:
+      {
+      completed: true,
+      completedAt: currentTimestamp
+    }
+  }
+).then(
+      (doc)=>{
+        return doc;
+      },
+      (err)=>{
+        return err;
+      }
+    );
+  }
+};
 
 var listAllTodos = (res)=>{
   var obj = TodoTask.find({}).then(
@@ -115,6 +172,10 @@ var listAllTodos = (res)=>{
     }
   );
 };
+
+app.listen(PORT,()=>{
+  console.log("App listening on port",PORT, " as ", (process.env.NODE_ENV || "production"));
+});
 
 /*
 IF I DO disconnect MONGOOSE, APP WON'T WORK
