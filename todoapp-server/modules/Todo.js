@@ -16,6 +16,10 @@ const TodoTask = mongoose.model("TodoAppTask",
   },
   completedAt:{
     type : Number
+  },
+  _creator:{
+    required:true,
+    type:mongoose.Schema.Types.ObjectId
   }
 });
 

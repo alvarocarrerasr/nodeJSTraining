@@ -12,7 +12,10 @@ var authenticate = (req,res,next)=>{
     req.token = token;
     next();
   }).catch((e)=>{
-    res.status(401).send();
+    res.status(401).send(
+    {"status":"NOTAUTH",
+    "Operation":"Authentication",
+    "Description":"We could not identify you. Please check the request headers"});
   });
 };
 
