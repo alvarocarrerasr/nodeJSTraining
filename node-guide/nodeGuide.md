@@ -457,7 +457,14 @@ Instalación
 ```bash
 npm install jsonwebtoken --save
 ```
+### Bcrypt
 
+Bcrypt (https://www.npmjs.com/package/bcryptjs) es un módulo fantástico para implementar el almacenamiento seguro de contraseñas. Utiliza una sal, al igual que algoritmos de hasheado para generar el String que se almacenará en la base de datos.
+
+Instalación
+```javascript
+npm install bcryptjs --save
+```
 ## Bases de Datos NoSQL: MongoDB
 
 MongoDB es un Gestor de Bases de Datos no relacional, es decir, no tenemos una relación cabecera-tuplas, o lo que es lo mismo, los datos no se encuentran estructurados.

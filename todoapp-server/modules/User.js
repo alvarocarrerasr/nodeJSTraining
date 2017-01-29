@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const _ = require("lodash");
+const bcrypt = require("bcryptjs");
 
-
+const NROUNDS = 10;
 const SALT = "SALTKW";
 var userSchema = new mongoose.Schema({
   email:{
@@ -33,6 +34,7 @@ var userSchema = new mongoose.Schema({
       },
       token:{
         type:String,
+        unique:true,
         required:true
       }
     }
@@ -40,6 +42,24 @@ var userSchema = new mongoose.Schema({
 });
 
 
+userSchema.methods.removeToken = function(token){
+  var user = this;
+  return new Promise((ok,error)=>{
+    user.update({
+      $pull:{
+        tokens:{token}
+      }
+    }).then(
+      (doc)=>{
+        ok("Token removed");
+      },
+      (error)=>{
+        error("Token could not be removed");
+      }
+    );
+
+  });
+};
 
 userSchema.methods.toJSON = function (){
   var user = this;
@@ -70,6 +90,8 @@ userSchema.statics.findByToken = function (token){
 
 };
 
+
+
 /* Instance methods for schema.
  We need a classical function (not an arrow one, ES6)
  because of the `this` keyword.
@@ -82,14 +104,44 @@ userSchema.methods.generateAuthToken = function (){
       _id: user._id.toHexString(),
       access
     },SALT).toString();
-    user.tokens.push({access,token});
+  user.tokens.push({access,token});
 
-    return user.save().then(()=>{
-      return token;
-    });
+  return user.save().then(()=>{
+    return token;
+  });
 };
 
+userSchema.methods.checkPassword = function (passw){
+  var user = this;
+  return new Promise((resolve,reject)=>{
+      bcrypt.compare(passw,user.password,(err,result)=>{
+        if(result){
+          return resolve(user.toJSON());
+        }
+        return reject("Incorrect password");
+    });
+  });
+};
+
+userSchema.pre("save",function(next){
+  var user = this;
+  if(user.isModified("password")){
+      bcrypt.genSalt(NROUNDS,(error,salt)=>{
+        bcrypt.hash(user.password,salt,(error,hashedPassword) => {
+          user.password = hashedPassword;
+          next();
+        })
+      });
+  }else{
+    next();
+  }
+
+});
+
 var User = mongoose.model("User",userSchema);
+
+
+
 
 module.exports = {
   User

@@ -117,7 +117,7 @@ app.patch("/todos/:id",(req,res)=>{
 /*
   Signup method
 */
-app.post("/user/newUser",(req,res)=>{
+app.post("/users/newUser",(req,res)=>{
   const requestData = req.body;
   var newUser = new User({
     email: requestData.email,
@@ -128,7 +128,7 @@ app.post("/user/newUser",(req,res)=>{
       return newUser.generateAuthToken();
     }).then((token)=>{
     res.header('x-auth',token).send(newUser.toJSON());
-  }).catch((error)=>{res.status(400).send(error)});
+  }).catch((error)=>{res.status(400).send(error.errmsg)});
 });
 
 
@@ -154,6 +154,48 @@ app.delete("/todos/:id",(req,res)=>{
   }
 });
 
+app.post("/users/login",(req,res)=>{
+  const email = req.body.email;
+  const passw = req.body.password;
+  User.findOne({email}).then(
+    (user)=>{
+      if(!user){
+        return res.status(401).send("User does not exist");
+      }else{
+        user.checkPassword(passw).then(
+          (resolve)=>{
+            user.generateAuthToken().then(
+              (authToken)=>{
+                return res.send({user,authToken});
+              }
+            );
+          },
+          (error)=>{
+            res.status(401).send(error);
+          }
+        );
+      }
+    },
+    (err)=>{
+      return res.status(401).send("User does not exist");
+    }
+  );
+});
+
+/*
+  Method to remove the token from database, which allows user to log-out from
+  system
+*/
+app.delete("/users/me/token",authenticate,(req,res) => {
+  req.user.removeToken(req.token).then(
+    (ok)=>{
+      res.send(ok);
+    },
+    (error)=>{
+      res.send(error);
+    }
+  )
+});
 
 var removeContents = (query)=>{
   TodoTask.remove(query).then(
