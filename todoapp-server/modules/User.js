@@ -3,9 +3,11 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const _ = require("lodash");
 const bcrypt = require("bcryptjs");
+const {settings} = require("./../setup.js");
 
-const NROUNDS = 10;
-const SALT = "SALTKW";
+const NROUNDS = settings.auth.rounds;
+const SALT = settings.auth.salt;
+
 var userSchema = new mongoose.Schema({
   email:{
     required : true,

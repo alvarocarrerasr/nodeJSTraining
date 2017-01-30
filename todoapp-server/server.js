@@ -1,4 +1,4 @@
-const {mongoose} = require("./db/mongoose-setup.js");
+const {mongoose,settings} = require("./setup.js");
 const {TodoTask} = require("./modules/Todo.js");
 const {User} = require("./modules/User.js");
 const {ObjectId} = require("mongodb");
@@ -8,7 +8,9 @@ const express = require("express");
 const bodyparser = require("body-parser");
 const _ = require("lodash");
 
-const PORT = process.env.PORT || 3000;
+const PORT = settings.defaultPort;
+const CURRENTMODE = process.env.NODE_ENV || settings.defaultMode;
+
 var app = express();
 
 app.use(bodyparser.json());
@@ -325,7 +327,7 @@ var listAllTodos = (userID,res)=>{
 };
 
 app.listen(PORT,()=>{
-  console.log("App listening on port",PORT, " as ", (process.env.NODE_ENV || "production"));
+  console.log("App listening on port",PORT, " as ", CURRENTMODE);
 });
 
 module.exports={

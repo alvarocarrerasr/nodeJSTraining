@@ -1,0 +1,19 @@
+{
+  "database":{
+    "test":{
+      "url":"mongodb://localhost:27017/",
+      "database":"tasksmongodbnode"
+    },
+    "production":{
+      "url":"mongodb://localhost:27017/",
+      "database":"tasksmongodbnodeTest"
+    }
+  },
+  "defaultPort":3000,
+  "defaultMode":"production",
+  "auth":{
+    "rounds":10,
+    "salt":"SALTKW"
+  }
+
+}
