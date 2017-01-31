@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat App</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/grids-responsive-min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Welcome to the Chat App</h1>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/index.js"></script>
+
+
+
+<div class="pure-g">
+    <div class="pure-u-1-2">
+      <form id="messageComposer" class="pure-form pure-form-stacked">
+        <legend>Compose a new message</legend>
+        <label for="message">Message:</label>
+        <textarea id="message" placeholder="Type your message" cols="50" rows="10"></textarea>
+        </br>
+        <button class="pure-button pure-button-active" id="sendNewMessage">Send message</button>
+        <button class="pure-button pure-button-active" id="sendCurrentLocation">Send location</button>
+      </form>
+    </div>
+    <div class="pure-u-1-2">
+      <ul id="txt"></ul>
+    </div>
+</div>
+
+</br></br></br>
+
+</body>
+</html>

@@ -462,8 +462,20 @@ npm install jsonwebtoken --save
 Bcrypt (https://www.npmjs.com/package/bcryptjs) es un módulo fantástico para implementar el almacenamiento seguro de contraseñas. Utiliza una sal, al igual que algoritmos de hasheado para generar el String que se almacenará en la base de datos.
 
 Instalación
-```javascript
+```bash
 npm install bcryptjs --save
+```
+
+### SocketIO
+SocketIO (https://www.npmjs.com/package/socket.io) nos va a permitir implementar los Web sockets. Son un tipo especial de sockets que mantienen la conexión en ambos extremos, intercambiando información de forma continua.
+Son muy útiles, por ejemplo, en caso de querer hacer un chat, en el que los usuarios no tengan que refrescar la página continuamente para ver nuevas actualizaciones (aunque se podría hacer en AJAX también).
+
+Más información, más adelante.
+
+Instalación:
+
+```bash
+npm install socket.io --save
 ```
 ## Bases de Datos NoSQL: MongoDB
 
@@ -869,3 +881,106 @@ Con un modelo en Mongoose podemos realizar todas las operaciones sobre documento
 	);
 	```
 Es decir, podremos ejecutar las mismas operaciones que teníamos con el conector oficial de Mongo, pero esta vez, enfocadas al tipo de documento.
+
+## WebSocket's con SocketIO
+
+SocketIO nos permitirá crear sockets WebSocket. Son conexiones que se mantienen en ambos sentidos y, por lo tanto, deberemos tener un servicio en el lado del servidor y otro en el lado del cliente escuchando y enviando información.
+
+En ambos casos, tanto en el lado del cliente como en el servidor, la función socket.on("CASO",callback); nos permitirá monitorizar o capturar los eventos que ocurran entre ambos extremos.
+
+### Configuración en el lado del cliente.
+En el lado del cliente, deberemos embeber el siguiente código, entre las etiquetas **body**:
+```html
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io();
+	socket.on("connect",function (){
+		console.log("Connected to server");
+	});
+	socket.on("disconnect",function (){
+		console.log("Ups... it seems server has been disconnected");
+	});
+</script>
+```
+El fichero indicado (socket.io.js) contiene los métodos que podremos utilizar en el lado del cliente.
+
+El código anterior, conecta el documento HTML con el servidor, por medio de un WebSocket y establece una conexión (línea var socket = io()). Posteriormente, monitoriza las futuras conexiones por medio de la función on("connect",callback). Utilizamos además, **funciones tradicionales**, y no arrow functions. Esto es porque no todos los navegadores las tienen implementadas.
+
+Utilizando las herramientas de desarrollador Google Chrome podemos observar que el navegador Web envía cada cierto tiempo paquetes que intentan comprobar si la conexión sigue activa. En caso de desconectar el servidor, se seguirán enviando paquetes, pero estos no llegarán y se marcarán como de color rojo.
+
+Muy importante la variable socket, la cual nos servirá para comunicarnos con el servidor y efectuar las operaciones que sean necesarias.
+
+### Configuración en el lado del servidor
+Similarmente, en el lado del servidor también tendremos que realizar cierta configuración:
+```javascript
+const socketio = require("socket.io");
+var app = express();
+var server = http.createServer(app);
+var io = socketio(server);
+
+io.on("connection",(socket)=>{
+  console.log("New user connected!");
+});
+
+server.listen(PORT,()=>{
+  console.log("Server is currently listening on port",PORT);
+});
+```
+El código anterior crea una aplicación Express (será el framework que utilizaremos como servidor HTTP), crea un servidor HTTP, utilizando la librería de serie de NodeJS (lo necesitaremos para poder conectar Socket.IO con Express), establece una conexión con los clientes Socket.io (io.on("connection",callback)) y, por último, activa el servidor Express.
+### Envío y escucha de eventos
+Socket.IO funciona emitiendo y capturando eventos que ocurran en el sistema.
+Las operaciones que nos permitirán enviar/recibir eventos son:
+* Enviar: Utilizaremos la función emit de socket, que toma como primer argumento el nombre del evento y como segundo argumento, el objeto que se desee enviar (recordar que en JS un objeto es TODO).
+```javascript
+io.emit("newStudent",
+	{
+		name:"Álvaro",
+		Universidad:"Universidad de Valladolid"
+});
+```
+* Recibir: Utilizaremos la función on de socket, que toma como primer argumento el nombre del evento y como segundo argumento, una función cuyos argumentos sean aquellos objetos que hayan sido enviados en el otro extremo.
+```javascript
+socket.on("newEmail",function(email){
+  console.log("New email",email);
+});
+```
+### La diferencia entre usar io o socket en el lado del servidor
+Hay una diferencia fundamental entre usar la variable io o la variable socket, que se nos instancia con cada nueva conexión y es justamente quién es el dispositivo que recibirá el mensaje.
+Así pues, enviar un mensaje (io.emit) usando io, hará que llegue a todos los peers. Sin embargo, en socket (socket.emit), solo llegará al peer que tiene esa instancia de socket. Esto es así excepto en el caso de broadcast.
+
+#### Obtención de dirección IP
+Viendo que por el momento la documentación de Socket.io (o mejor dicho, de Engine.io) no es muy buena, añado a continuación el código para obtener la dirección IP del peer conectado, lo que puede resultar útil en ciertas ocasiones, por ejemplo, en casos de querer hacer un log:
+```javascript
+const address = socket.handshake.address;
+```
+Como curiosidad, aunque no tenga que ver con Node y Socket.io, me parece reseñable indicar que todas las conexiones de prueba que hice se hicieron por medio de IPv6.
+#### Broadcasting de un mensaje a todos los peers excepto a uno.
+La forma más sencilla de enviar un mensaje a todos los peers, excepto a uno en concreto, por ejemplo, en el caso de que estemos haciendo un chat de grupo y nos interese enviar un mensaje de bienvenida al peer que se acabe de conectar, podremos usar el método broadcast de socket:
+```javascript
+io.on("connection",(socket)=>{
+  socket.broadcast.emit("newPeer",{
+    /*Message to be sent to the new Peer*/
+  });
+});
+```
+### ACK's a.k.a. Acknowledgment message
+También es posible implementar ACKs, o mejor dicho, mensajes de confirmación de recepción por ambas partes.
+* En el lado del cliente: Habría que añadir un tercer argumento a la función emit que fuera una callback:
+```javascript
+function sendNewMessage(){
+  socket.emit("sendMessage",{
+    /*Data bla bla bla*/
+  }, function(){
+    addText("ACK: ","Message has been successfully sent");
+  });
+}
+```
+* En el lado del servidor: Habría que añadir un tercer argumento a la función on y llamar a esa callback.
+```javascript
+socket.on("sendMessage",(message, callback)=>{
+	console.log("New message",message);
+	callback();
+});
+```
+Similarmente, si en ambas funciones añadiéramos un argumento, podríamos intercambiar información entre ambos extremos, haciendo la comunicación mucho más útil (por ejemplo, podríamos enviar un mensaje de error, en caso de que no se haya formado bien el mensaje inicial...).
+Ambas notaciones las intercambiaremos dependiendo de en qué lugar queremos tener el ACK (y quién envía la información).
